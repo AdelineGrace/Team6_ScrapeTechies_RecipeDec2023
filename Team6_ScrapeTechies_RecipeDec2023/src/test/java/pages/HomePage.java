@@ -37,5 +37,11 @@ public class HomePage {
 		btnSearch.click();
 		Log.info("Clicked on Search button");
 	}
+	
+	public void GotoAtoZPage()
+	{
+		linkRecipeAtoZ.click();
+		Log.info("Navigated to A to Z Recipes Page");
+	}
 
 }

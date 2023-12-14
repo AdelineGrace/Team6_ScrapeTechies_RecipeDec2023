@@ -39,7 +39,7 @@ public class DriverManager {
                     break;
             }
         }
-
+        driver.get().manage().deleteAllCookies();
         driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
         driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(50));
         driver.get().manage().window().maximize();
