@@ -57,9 +57,9 @@ function toggleAllBoxes() {
 <tr>
 <td>Tests passed/Failed/Skipped:</td><td>0/1/0</td>
 </tr><tr>
-<td>Started on:</td><td>Fri Dec 15 00:59:31 IST 2023</td>
+<td>Started on:</td><td>Fri Dec 15 01:25:04 IST 2023</td>
 </tr>
-<tr><td>Total time:</td><td>596 seconds (596178 ms)</td>
+<tr><td>Total time:</td><td>503 seconds (503704 ms)</td>
 </tr><tr>
 <td>Included groups:</td><td></td>
 </tr><tr>
@@ -81,10 +81,10 @@ function toggleAllBoxes() {
 Build info: version: &apos;4.16.1&apos;, revision: &apos;9b4c83354e&apos;
 System info: os.name: &apos;Mac OS X&apos;, os.arch: &apos;aarch64&apos;, os.version: &apos;12.1&apos;, java.version: &apos;20.0.1&apos;
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Command: [5e2530a1cc50abd441392c60964cbf7e, getElementText {id=A56DE7D874E85BB6F7EF30692232D8F8_element_586}]
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 120.0.6099.109, chrome: {chromedriverVersion: 120.0.6099.71 (9729082fe617..., userDataDir: /var/folders/pp/p_4g4ntn2qg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:53957}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:53957/devtoo..., se:cdpVersion: 120.0.6099.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
-Element: [[ChromeDriver: chrome on mac (5e2530a1cc50abd441392c60964cbf7e)] -&gt; xpath: //time[@itemprop=&apos;prepTime&apos;]]
-Session ID: 5e2530a1cc50abd441392c60964cbf7e
+Command: [d606587de650092d2987ff983defa851, getElementText {id=293D78E6B6E3A142E478A682D5627000_element_408}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 120.0.6099.109, chrome: {chromedriverVersion: 120.0.6099.71 (9729082fe617..., userDataDir: /var/folders/pp/p_4g4ntn2qg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60952}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:60952/devtoo..., se:cdpVersion: 120.0.6099.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on mac (d606587de650092d2987ff983defa851)] -&gt; xpath: //span[@itemprop=&apos;calories&apos;]]
+Session ID: d606587de650092d2987ff983defa851
 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:484)
@@ -97,7 +97,8 @@ Session ID: 5e2530a1cc50abd441392c60964cbf7e
 	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:523)
 	at org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
 	at org.openqa.selenium.remote.RemoteWebElement.getText(RemoteWebElement.java:192)
-	at pages.AtoZPage.SelectRecipe(AtoZPage.java:70)
+	at pages.RecipePage.GetRecipeDetails(RecipePage.java:34)
+	at pages.AtoZPage.SelectRecipe(AtoZPage.java:66)
 	at testcases.TestClass.Test1(TestClass.java:14)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
@@ -125,16 +126,16 @@ Session ID: 5e2530a1cc50abd441392c60964cbf7e
 	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:115)
 	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
 	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
-</pre></div><a href='#' onClick='toggleBox("stack-trace801996095", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
-<div class='stack-trace' id='stack-trace801996095'><pre>org.openqa.selenium.TimeoutException: timeout: Timed out receiving message from renderer: 50.000
+</pre></div><a href='#' onClick='toggleBox("stack-trace983834017", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace983834017'><pre>org.openqa.selenium.TimeoutException: timeout: Timed out receiving message from renderer: 50.000
   (Session info: chrome=120.0.6099.109)
 Build info: version: &apos;4.16.1&apos;, revision: &apos;9b4c83354e&apos;
 System info: os.name: &apos;Mac OS X&apos;, os.arch: &apos;aarch64&apos;, os.version: &apos;12.1&apos;, java.version: &apos;20.0.1&apos;
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Command: [5e2530a1cc50abd441392c60964cbf7e, getElementText {id=A56DE7D874E85BB6F7EF30692232D8F8_element_586}]
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 120.0.6099.109, chrome: {chromedriverVersion: 120.0.6099.71 (9729082fe617..., userDataDir: /var/folders/pp/p_4g4ntn2qg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:53957}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:53957/devtoo..., se:cdpVersion: 120.0.6099.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
-Element: [[ChromeDriver: chrome on mac (5e2530a1cc50abd441392c60964cbf7e)] -&gt; xpath: //time[@itemprop=&apos;prepTime&apos;]]
-Session ID: 5e2530a1cc50abd441392c60964cbf7e
+Command: [d606587de650092d2987ff983defa851, getElementText {id=293D78E6B6E3A142E478A682D5627000_element_408}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 120.0.6099.109, chrome: {chromedriverVersion: 120.0.6099.71 (9729082fe617..., userDataDir: /var/folders/pp/p_4g4ntn2qg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60952}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:60952/devtoo..., se:cdpVersion: 120.0.6099.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on mac (d606587de650092d2987ff983defa851)] -&gt; xpath: //span[@itemprop=&apos;calories&apos;]]
+Session ID: d606587de650092d2987ff983defa851
 	at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
 	at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
 	at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:484)
@@ -147,7 +148,8 @@ Session ID: 5e2530a1cc50abd441392c60964cbf7e
 	at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:523)
 	at org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
 	at org.openqa.selenium.remote.RemoteWebElement.getText(RemoteWebElement.java:192)
-	at pages.AtoZPage.SelectRecipe(AtoZPage.java:70)
+	at pages.RecipePage.GetRecipeDetails(RecipePage.java:34)
+	at pages.AtoZPage.SelectRecipe(AtoZPage.java:66)
 	at testcases.TestClass.Test1(TestClass.java:14)
 	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 	at java.base/java.lang.reflect.Method.invoke(Method.java:578)
@@ -176,8 +178,8 @@ Session ID: 5e2530a1cc50abd441392c60964cbf7e
 	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
 	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
 </pre></div></td>
-<td>596</td>
-<td>testcases.TestClass@6ffa56fa</td></tr>
+<td>503</td>
+<td>testcases.TestClass@188b6035</td></tr>
 </table><p>
 </body>
 </html>

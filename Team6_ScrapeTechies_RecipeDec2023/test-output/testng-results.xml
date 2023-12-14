@@ -2,12 +2,12 @@
 <testng-results ignored="0" total="1" passed="0" failed="1" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2023-12-15T00:59:31 IST" name="Default suite" finished-at="2023-12-15T01:09:27 IST" duration-ms="596178">
+  <suite started-at="2023-12-15T01:25:04 IST" name="Default suite" finished-at="2023-12-15T01:33:27 IST" duration-ms="503704">
     <groups>
     </groups>
-    <test started-at="2023-12-15T00:59:31 IST" name="Default test" finished-at="2023-12-15T01:09:27 IST" duration-ms="596178">
+    <test started-at="2023-12-15T01:25:04 IST" name="Default test" finished-at="2023-12-15T01:33:27 IST" duration-ms="503704">
       <class name="testcases.TestClass">
-        <test-method signature="Test1()[pri:0, instance:testcases.TestClass@6ffa56fa]" started-at="2023-12-15T00:59:31 IST" name="Test1" finished-at="2023-12-15T01:09:27 IST" duration-ms="596156" status="FAIL">
+        <test-method signature="Test1()[pri:0, instance:testcases.TestClass@188b6035]" started-at="2023-12-15T01:25:04 IST" name="Test1" finished-at="2023-12-15T01:33:27 IST" duration-ms="503685" status="FAIL">
           <exception class="org.openqa.selenium.TimeoutException">
             <message>
               <![CDATA[timeout: Timed out receiving message from renderer: 50.000
@@ -15,10 +15,10 @@
 Build info: version: '4.16.1', revision: '9b4c83354e'
 System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '12.1', java.version: '20.0.1'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Command: [5e2530a1cc50abd441392c60964cbf7e, getElementText {id=A56DE7D874E85BB6F7EF30692232D8F8_element_586}]
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 120.0.6099.109, chrome: {chromedriverVersion: 120.0.6099.71 (9729082fe617..., userDataDir: /var/folders/pp/p_4g4ntn2qg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:53957}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:53957/devtoo..., se:cdpVersion: 120.0.6099.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
-Element: [[ChromeDriver: chrome on mac (5e2530a1cc50abd441392c60964cbf7e)] -> xpath: //time[@itemprop='prepTime']]
-Session ID: 5e2530a1cc50abd441392c60964cbf7e]]>
+Command: [d606587de650092d2987ff983defa851, getElementText {id=293D78E6B6E3A142E478A682D5627000_element_408}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 120.0.6099.109, chrome: {chromedriverVersion: 120.0.6099.71 (9729082fe617..., userDataDir: /var/folders/pp/p_4g4ntn2qg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60952}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:60952/devtoo..., se:cdpVersion: 120.0.6099.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on mac (d606587de650092d2987ff983defa851)] -> xpath: //span[@itemprop='calories']]
+Session ID: d606587de650092d2987ff983defa851]]>
             </message>
             <full-stacktrace>
               <![CDATA[org.openqa.selenium.TimeoutException: timeout: Timed out receiving message from renderer: 50.000
@@ -26,10 +26,10 @@ Session ID: 5e2530a1cc50abd441392c60964cbf7e]]>
 Build info: version: '4.16.1', revision: '9b4c83354e'
 System info: os.name: 'Mac OS X', os.arch: 'aarch64', os.version: '12.1', java.version: '20.0.1'
 Driver info: org.openqa.selenium.chrome.ChromeDriver
-Command: [5e2530a1cc50abd441392c60964cbf7e, getElementText {id=A56DE7D874E85BB6F7EF30692232D8F8_element_586}]
-Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 120.0.6099.109, chrome: {chromedriverVersion: 120.0.6099.71 (9729082fe617..., userDataDir: /var/folders/pp/p_4g4ntn2qg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:53957}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:53957/devtoo..., se:cdpVersion: 120.0.6099.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
-Element: [[ChromeDriver: chrome on mac (5e2530a1cc50abd441392c60964cbf7e)] -> xpath: //time[@itemprop='prepTime']]
-Session ID: 5e2530a1cc50abd441392c60964cbf7e
+Command: [d606587de650092d2987ff983defa851, getElementText {id=293D78E6B6E3A142E478A682D5627000_element_408}]
+Capabilities {acceptInsecureCerts: false, browserName: chrome, browserVersion: 120.0.6099.109, chrome: {chromedriverVersion: 120.0.6099.71 (9729082fe617..., userDataDir: /var/folders/pp/p_4g4ntn2qg...}, fedcm:accounts: true, goog:chromeOptions: {debuggerAddress: localhost:60952}, networkConnectionEnabled: false, pageLoadStrategy: normal, platformName: mac, proxy: Proxy(), se:cdp: ws://localhost:60952/devtoo..., se:cdpVersion: 120.0.6099.109, setWindowRect: true, strictFileInteractability: false, timeouts: {implicit: 0, pageLoad: 300000, script: 30000}, unhandledPromptBehavior: dismiss and notify, webauthn:extension:credBlob: true, webauthn:extension:largeBlob: true, webauthn:extension:minPinLength: true, webauthn:extension:prf: true, webauthn:virtualAuthenticators: true}
+Element: [[ChromeDriver: chrome on mac (d606587de650092d2987ff983defa851)] -> xpath: //span[@itemprop='calories']]
+Session ID: d606587de650092d2987ff983defa851
 at java.base/jdk.internal.reflect.DirectConstructorHandleAccessor.newInstance(DirectConstructorHandleAccessor.java:67)
 at java.base/java.lang.reflect.Constructor.newInstanceWithCaller(Constructor.java:500)
 at java.base/java.lang.reflect.Constructor.newInstance(Constructor.java:484)
@@ -42,7 +42,8 @@ at org.openqa.selenium.remote.service.DriverCommandExecutor.execute(DriverComman
 at org.openqa.selenium.remote.RemoteWebDriver.execute(RemoteWebDriver.java:523)
 at org.openqa.selenium.remote.RemoteWebElement.execute(RemoteWebElement.java:224)
 at org.openqa.selenium.remote.RemoteWebElement.getText(RemoteWebElement.java:192)
-at pages.AtoZPage.SelectRecipe(AtoZPage.java:70)
+at pages.RecipePage.GetRecipeDetails(RecipePage.java:34)
+at pages.AtoZPage.SelectRecipe(AtoZPage.java:66)
 at testcases.TestClass.Test1(TestClass.java:14)
 at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
 at java.base/java.lang.reflect.Method.invoke(Method.java:578)
