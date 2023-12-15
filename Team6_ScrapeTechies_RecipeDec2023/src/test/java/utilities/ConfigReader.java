@@ -65,13 +65,21 @@ import enums.BrowserType;
 				throw new RuntimeException("implicitlyWait not specified in the Configuration.properties file.");
 		}
 
-		public static String getWebUrl() 
+		public String getWebUrl() 
 		{
 			String url = properties.getProperty("weburl");
 			if (url != null)
 				return url;
 			else
 				throw new RuntimeException("webpage url is not specified in the config.properties file.");
+		}
+		
+		public String getExcelPath() {
+			String path = properties.getProperty("excelPath");
+			if (path != null)
+				return path;
+			else
+				throw new RuntimeException("excelPath not specified in the Configuration.properties file.");
 		}
 
 	}

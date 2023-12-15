@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 import org.testng.annotations.*;
 import managers.DriverManager;
+import managers.FileManager;
 import utilities.ConfigReader;
 import utilities.ExcelWriter;
 
@@ -15,7 +16,7 @@ public class Recipe1 {
     @BeforeMethod
     public static void setUp() {
         driverManager.getDriver();
-        driverManager.getDriver().get(ConfigReader.getWebUrl());
+        driverManager.getDriver().get(FileManager.getInstance().getConfigReader().getWebUrl());
         excelWriter = new ExcelWriter("src/test/resources/Data/Recipe-filters-ScrapperHackathon.xlsx");
         List<String> headers = List.of(
                 "Recipe ID",
