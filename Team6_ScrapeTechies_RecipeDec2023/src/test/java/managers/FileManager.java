@@ -27,6 +27,6 @@ public class FileManager {
 	 }
 	 
 	 public ExcelReader getExcelReader() {
-		 return (excelReader == null) ? new ExcelReader() : excelReader;
+		 return (excelReader == null) ? new ExcelReader(null) : excelReader;
 	 }
 }
