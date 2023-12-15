@@ -40,8 +40,8 @@ public class BaseClass {
 		atoZPage = testContext.getPageObjectManager().getAtoZPage();
 		
 		configReader = FileManager.getInstance().getConfigReader();
-		excelWriter = FileManager.getInstance().getExcelWriter();
-		excelReader = FileManager.getInstance().getExcelReader();
+		//excelWriter = FileManager.getInstance().getExcelWriter();
+		//excelReader = FileManager.getInstance().getExcelReader();
 	}
 	
 
