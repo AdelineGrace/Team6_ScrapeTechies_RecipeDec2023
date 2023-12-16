@@ -1,0 +1,128 @@
+package pages;
+
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import model.Recipe;
+import utilities.Log;
+
+public class AtoZPage {
+
+	WebDriver driver;
+	RecipePage recipePage;
+
+	@FindBy(xpath = "//div[contains(text(),'Goto Page')][1]/a[text()='2']")
+	WebElement page2;
+
+	@FindBy(xpath = "//div[contains(@class,'recipecard')]")
+	List<WebElement> recipeCards;
+
+	public AtoZPage(WebDriver driver) {
+		this.driver = driver;
+		PageFactory.initElements(driver, this);
+	}
+
+	public List<Recipe> GetAllRecipes(List<Recipe> lstRecipe) {
+		// List<Recipe> lstRecipe = new ArrayList<Recipe>();
+
+		try {
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
+			// go to 2nd page
+			wait.until(ExpectedConditions
+					.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Goto Page')][1]/a[text()='2']")));
+			((JavascriptExecutor) driver).executeScript("arguments[0].click();", page2);
+
+			// Get recipes for each recipe card on page
+			for (int i = 1; i <= 5; i++) {
+				// New recipe object
+				Recipe recipe = new Recipe();
+
+				// Scroll to the card
+				WebElement recipeCard = driver.findElement(By.xpath("//div[contains(@class,'recipecard')][" + i + "]"));
+				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", recipeCard);
+
+				// Get the recipe id
+				WebElement recipeNo = driver.findElement(
+						By.xpath("//div[contains(@class,'recipecard')][" + i + "]//span[contains(text(),'Recipe#')]"));
+				recipe.recipeId = recipeNo.getText().split(" ")[1].split(System.lineSeparator())[0];
+				Log.info(recipe.recipeId);
+
+				// Get the recipe name
+				WebElement recipeLink = driver.findElement(
+						By.xpath("//div[contains(@class,'recipecard')][" + i + "]//div[@class='rcc_rcpcore']//a"));
+				recipe.recipeName = recipeLink.getText();
+				Log.info(recipe.recipeName);
+
+				// Click on the recipe name/link
+				((JavascriptExecutor) driver).executeScript("arguments[0].click();", recipeLink);
+
+				recipePage = new RecipePage(driver);
+				recipe = recipePage.GetRecipeDetails(recipe);
+
+				lstRecipe.add(recipe);
+				Log.info("No. of recipes found so far " + lstRecipe.size());
+			}
+		} catch (Exception ex) {
+			Log.info(ex.getMessage());
+		}
+
+		return lstRecipe;
+	}
+
+	public List<Recipe> PagesLogic() {
+		List<Recipe> lstRecipe = new ArrayList<Recipe>();
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
+
+		for (char letter = 'A'; letter <= 'A'; letter++) {
+			try {
+				if (letter != 'A') {
+					Log.info("looking for " + letter);
+
+					WebElement letterElement = driver
+							.findElement(By.xpath("//a[text()='" + String.valueOf(letter) + "']"));
+					((JavascriptExecutor) driver).executeScript("arguments[0].click();", letterElement);
+
+					Log.info("clicked on " + letter);
+				}
+
+				List<WebElement> pagination = driver.findElements(By.xpath("//div[contains(text(),'Goto Page')][1]/a"));
+
+				//for (int i = 2; i <= pagination.size(); i++) {
+				for (int i = 2; i <= 2; i++) {
+					try {
+						if (i != 1) {
+							Log.info("looking for page " + i);
+
+							wait.until(ExpectedConditions.visibilityOfElementLocated(
+									By.xpath("//*[@id='maincontent']/div[1]/div[2]/a[" + i + "]")));
+							WebElement pagei = driver
+									.findElement(By.xpath("//*[@id='maincontent']/div[1]/div[2]/a[" + i + "]"));
+
+							((JavascriptExecutor) driver).executeScript("arguments[0].click();", pagei);
+							Log.info("clicked on page " + i);
+
+						}
+					} catch (Exception ex) {
+						Log.info(ex.getMessage());
+					}
+					 lstRecipe = GetAllRecipes(lstRecipe);
+				}
+
+			} catch (Exception ex) {
+				Log.info(ex.getMessage());
+			}
+		}
+
+		return lstRecipe;
+	}
+}

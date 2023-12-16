@@ -1,18 +1,20 @@
 package managers;
 
 import utilities.ConfigReader;
+import utilities.ExcelReader;
 import utilities.ExcelWriter;
 
-public class FileReaderManager {
+public class FileManager {
 
-	private static FileReaderManager fileReaderManager = new FileReaderManager();
+	private static FileManager fileReaderManager = new FileManager();
 	private static ConfigReader configReader;
 	private static ExcelWriter excelWriter;
-
-	private FileReaderManager() {
+	private static ExcelReader excelReader;
+	
+	private FileManager() {
 	}
 
-	 public static FileReaderManager getInstance( ) {
+	 public static FileManager getInstance( ) {
 	      return fileReaderManager;
 	 }
 
@@ -22,5 +24,9 @@ public class FileReaderManager {
 	 
 	 public ExcelWriter getExcelWriter() {
 		 return (excelWriter == null) ? new ExcelWriter(null) : excelWriter;
+	 }
+	 
+	 public ExcelReader getExcelReader() {
+		 return (excelReader == null) ? new ExcelReader(null) : excelReader;
 	 }
 }

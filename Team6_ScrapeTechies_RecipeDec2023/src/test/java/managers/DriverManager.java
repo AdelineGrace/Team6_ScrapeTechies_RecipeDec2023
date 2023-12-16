@@ -16,7 +16,7 @@ public class DriverManager {
     private BrowserType browserType;
 
     public DriverManager() {
-        browserType = FileReaderManager.getInstance().getConfigReader().getBrowserType();
+        browserType = FileManager.getInstance().getConfigReader().getBrowserType();
     }
 
     public WebDriver getDriver() {
@@ -29,8 +29,10 @@ public class DriverManager {
 
                 case CHROME:
                     ChromeOptions chromeOptions = new ChromeOptions();
-                    chromeOptions.addArguments("--headless"); // Run Chrome in headless mode
-                    chromeOptions.addArguments("--disable-popup-blocking"); // Disable popup blocking
+                    //chromeOptions.addArguments("--headless"); // Run Chrome in headless mode
+                    //chromeOptions.addArguments("--disable-popup-blocking"); // Disable popup blocking
+                    chromeOptions.addArguments("--disable-extensions"); // Disable popup blocking
+                    chromeOptions.addArguments("--blink-settings=imagesEnabled=false");
                     driver.set(new ChromeDriver(chromeOptions));
                     break;
 
@@ -39,11 +41,11 @@ public class DriverManager {
                     break;
             }
         }
-
-        driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(50));
-        driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(50));
+        driver.get().manage().deleteAllCookies();
+        driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
+        driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
         driver.get().manage().window().maximize();
-
+        
         return driver.get();
     }
 
