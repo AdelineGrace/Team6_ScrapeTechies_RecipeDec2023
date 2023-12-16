@@ -3,6 +3,7 @@ package pages;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -33,52 +34,138 @@ public class AtoZPage {
 	}
 
 	public List<Recipe> GetAllRecipes(List<Recipe> lstRecipe) {
-		// List<Recipe> lstRecipe = new ArrayList<Recipe>();
+	    try {
+	        List<WebElement> recipeCards = driver.findElements(By.xpath("//div[contains(@class,'recipecard')]"));
 
-		try {
-			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
-			// go to 2nd page
-			wait.until(ExpectedConditions
-					.visibilityOfElementLocated(By.xpath("//div[contains(text(),'Goto Page')][1]/a[text()='2']")));
-			((JavascriptExecutor) driver).executeScript("arguments[0].click();", page2);
+	        for (int i = 1; i <= recipeCards.size(); i++) {
+	            Recipe recipe = new Recipe();
 
-			// Get recipes for each recipe card on page
-			for (int i = 1; i <= 5; i++) {
-				// New recipe object
-				Recipe recipe = new Recipe();
+	            try {
+	                WebElement recipeCard = driver.findElement(By.xpath("/html[1]/body[1]/div[2]/form[1]/div[3]/div[2]/div[1]/div[1]/div[3]/div[" + i + "]"));
 
-				// Scroll to the card
-				WebElement recipeCard = driver.findElement(By.xpath("//div[contains(@class,'recipecard')][" + i + "]"));
-				((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", recipeCard);
+//	                // Your code for extracting details from the recipe card
+		
+//
+	                // Get the recipe id
+	                WebElement recipeNo = recipeCard.findElement(By.xpath(".//span[contains(text(),'Recipe#')]"));
+	                recipe.recipeId = recipeNo.getText().split(" ")[1].split(System.lineSeparator())[0];
+	                Log.info(recipe.recipeId);
 
-				// Get the recipe id
-				WebElement recipeNo = driver.findElement(
-						By.xpath("//div[contains(@class,'recipecard')][" + i + "]//span[contains(text(),'Recipe#')]"));
-				recipe.recipeId = recipeNo.getText().split(" ")[1].split(System.lineSeparator())[0];
-				Log.info(recipe.recipeId);
+	                // Get the recipe name
+	                WebElement recipeLink = recipeCard.findElement(By.xpath(".//div[@class='rcc_rcpcore']//a"));
+	                recipe.recipeName = recipeLink.getText();
+	                Log.info(recipe.recipeName);
 
-				// Get the recipe name
-				WebElement recipeLink = driver.findElement(
-						By.xpath("//div[contains(@class,'recipecard')][" + i + "]//div[@class='rcc_rcpcore']//a"));
-				recipe.recipeName = recipeLink.getText();
-				Log.info(recipe.recipeName);
+	                // Click on the recipe link
+	                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", recipeLink);
+	                recipePage = new RecipePage(driver);
+	                recipe = recipePage.GetRecipeDetails(recipe);
 
-				// Click on the recipe name/link
-				((JavascriptExecutor) driver).executeScript("arguments[0].click();", recipeLink);
+	                lstRecipe.add(recipe);
+	                Log.info("No. of recipes found so far " + lstRecipe.size());
 
-				recipePage = new RecipePage(driver);
-				recipe = recipePage.GetRecipeDetails(recipe);
+	                // Navigate back
+	                driver.navigate().back();
 
-				lstRecipe.add(recipe);
-				Log.info("No. of recipes found so far " + lstRecipe.size());
-			}
-		} catch (Exception ex) {
-			Log.info(ex.getMessage());
-		}
+	            } catch (NoSuchElementException e2) {
+	                // Log the exception
+	                Log.info("Recipe card not found for index: " + i);
+	                continue; // Continue with the next iteration of the loop
+	            }
+	        }
+	    } catch (Exception ex) {
+	        Log.info(ex.getMessage());
+	    }
 
-		return lstRecipe;
+	    return lstRecipe;
 	}
+//
+//
 
+//		public List<Recipe> GetAllRecipes(List<Recipe> lstRecipe) {
+//		    try {
+//		        // Define the two XPaths
+//		        String recipeCardXPath1 = "//div[contains(@class,'recipecard')][%d]";
+//		        String recipeCardXPath2 = "/html[1]/body[1]/div[2]/form[1]/div[3]/div[2]/div[1]/div[1]/div[3]/div[%d]/div[3]/span[1]/a[1]";
+//		        WebDriverWait wait = new WebDriverWait(driver,Duration.ofSeconds(30));
+//		        // Iterate through each recipe card
+//		        List<WebElement> recipeCards = driver.findElements(By.xpath("//div[contains(@class,'recipecard')]"));
+//		        for (int i = 1; i <= recipeCards.size(); i++) {
+//		            try {
+//		                Recipe recipe = new Recipe();
+//		                WebElement recipeCard = null;  // Declare recipeCard here
+//
+//		                // Try the first XPath
+//		                recipeCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(recipeCardXPath1, i))));
+//		                Log.info("Using XPath 1 for Recipe Card");
+//
+//		                // Your code for extracting details from the recipe card
+//
+//		                // Get the recipe id
+//		                WebElement recipeNo = recipeCard.findElement(By.xpath(".//span[contains(text(),'Recipe#')]"));
+//		                recipe.recipeId = recipeNo.getText().split(" ")[1].split(System.lineSeparator())[0];
+//		                Log.info(recipe.recipeId);
+//
+//		                // Get the recipe name
+//		                WebElement recipeLink = recipeCard.findElement(By.xpath(".//div[@class='rcc_rcpcore']//a"));
+//		                recipe.recipeName = recipeLink.getText();
+//		                Log.info(recipe.recipeName);
+//
+//		                // Click on the recipe link
+//		                ((JavascriptExecutor) driver).executeScript("arguments[0].click();", recipeLink);
+//		                recipePage = new RecipePage(driver);
+//		                recipe = recipePage.GetRecipeDetails(recipe);
+//
+//		                lstRecipe.add(recipe);
+//		                Log.info("No. of recipes found so far " + lstRecipe.size());
+//
+//		                // Navigate back
+//		                driver.navigate().back();
+//		            } catch (NoSuchElementException e1) {
+//		                try {
+//		                    // If the first XPath fails, try the second XPath
+//		                  WebElement  recipeCard = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(String.format(recipeCardXPath2,i))));
+//		                    Log.info("Using XPath 2 for Recipe Card");
+//
+//		                    // Your code for extracting details from the recipe card
+//			                Recipe recipe = new Recipe();
+//
+//		                    // Get the recipe id
+//		                    WebElement recipeNo = recipeCard.findElement(By.xpath(".//span[contains(text(),'Recipe#')]"));
+//		                    recipe.recipeId = recipeNo.getText().split(" ")[1].split(System.lineSeparator())[0];
+//		                    Log.info(recipe.recipeId);
+//
+//		                    // Get the recipe name
+//		                    WebElement recipeLink = recipeCard.findElement(By.xpath(".//div[@class='rcc_rcpcore']//a"));
+//		                    recipe.recipeName = recipeLink.getText();
+//		                    Log.info(recipe.recipeName);
+//
+//		                    // Click on the recipe link
+//		                    ((JavascriptExecutor) driver).executeScript("arguments[0].click();", recipeLink);
+//		                    recipePage = new RecipePage(driver);
+//		                    recipe = recipePage.GetRecipeDetails(recipe);
+//
+//		                    lstRecipe.add(recipe);
+//		                    Log.info("No. of recipes found so far " + lstRecipe.size());
+//
+//		                    // Navigate back
+//		                    driver.navigate().back();
+//		                } catch (NoSuchElementException e2) {
+//		                    // Log the exception
+//		                    Log.info("Recipe card not found for index: " + i);
+//		                    continue; // Continue with the next iteration of the loop
+//		                }
+//		            }
+//		        }
+//		    } catch (Exception ex) {
+//		        Log.info(ex.getMessage());
+//		    }
+//
+//		    return lstRecipe;
+//		}
+//
+//	
+	
 	public List<Recipe> PagesLogic() {
 		List<Recipe> lstRecipe = new ArrayList<Recipe>();
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
@@ -98,7 +185,7 @@ public class AtoZPage {
 				List<WebElement> pagination = driver.findElements(By.xpath("//div[contains(text(),'Goto Page')][1]/a"));
 
 				//for (int i = 2; i <= pagination.size(); i++) {
-				for (int i = 2; i <= 2; i++) {
+				for (int i = 5; i <= 10; i++) {
 					try {
 						if (i != 1) {
 							Log.info("looking for page " + i);

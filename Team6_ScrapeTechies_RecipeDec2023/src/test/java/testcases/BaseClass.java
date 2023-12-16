@@ -39,7 +39,7 @@ public class BaseClass {
 		searchResultsPage = testContext.getPageObjectManager().getSearchResultsPage();
 		atoZPage = testContext.getPageObjectManager().getAtoZPage();
 		
-		configReader = FileManager.getInstance().getConfigReader();
+		//configReader = FileManager.getInstance().getConfigReader();
 		//excelWriter = FileManager.getInstance().getExcelWriter();
 		//excelReader = FileManager.getInstance().getExcelReader();
 	}

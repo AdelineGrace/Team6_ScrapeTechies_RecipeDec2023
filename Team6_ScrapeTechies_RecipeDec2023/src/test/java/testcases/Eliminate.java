@@ -9,14 +9,7 @@
 //
 //public class Eliminate {
 //	
-//    List<WebElement> recipeElements = driver.findElements(By.xpath("//div[@class='recipe']"));
-//
-//  //Twinkle Code has to be added here
-//    for (WebElement recipeElement : recipeElements) {
-//
-//    	String recipeId = extractRecipeId(recipeElement);
-//        String recipeName = extractRecipeName(recipeElement);
-//        String ingredients = extractIngredients(recipeElement);
+//   
 //        
 //    ExcelReader excelReader = new ExcelReader("src/test/resources/Data/IngredientsAndComorbidities-ScrapperHackathon.xlsx");
 //
@@ -34,7 +27,7 @@
 //      
 //      
 //        if (!EliminateRecipe) {
-//            writeRecipeDetailsToSheet(recipeId, recipeName, category, foodCategory, ingredients,
+//        	writeMorbidConditionToSheet(recipeId, recipeName, category, foodCategory, ingredients,
 //                    preparationTime, cookingTime, preparationMethod, nutrientValues, morbidConditions, recipeUrl, recipeDataSheet);
 //  
 //        

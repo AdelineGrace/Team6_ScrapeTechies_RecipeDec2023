@@ -1,5 +1,6 @@
 package managers;
 import java.time.Duration;
+import java.util.Collections;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -9,6 +10,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import enums.BrowserType;
 
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.JavascriptExecutor;
 
 public class DriverManager {
 
@@ -28,14 +30,39 @@ public class DriverManager {
                     break;
 
                 case CHROME:
+                   // ChromeOptions chromeOptions = new ChromeOptions();
+//                    //chromeOptions.addArguments("--headless"); // Run Chrome in headless mode
+//                    //chromeOptions.addArguments("--disable-popup-blocking"); // Disable popup blocking
+//                    chromeOptions.addArguments("--disable-extensions"); // Disable popup blocking
+//                    chromeOptions.addArguments("--blink-settings=imagesEnabled=false");
+//                    JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+//                    jsExecutor.executeScript("document.querySelectorAll('.ad-element').forEach(el => el.style.display = 'none');");
+//
+//                    driver.set(new ChromeDriver(chromeOptions));
+//                    break;
                     ChromeOptions chromeOptions = new ChromeOptions();
-                    //chromeOptions.addArguments("--headless"); // Run Chrome in headless mode
+                    chromeOptions.addArguments("--headless"); // Run Chrome in headless mode
                     //chromeOptions.addArguments("--disable-popup-blocking"); // Disable popup blocking
-                    chromeOptions.addArguments("--disable-extensions"); // Disable popup blocking
+                    chromeOptions.addArguments("--disable-extensions"); // Disable extensions
                     chromeOptions.addArguments("--blink-settings=imagesEnabled=false");
-                    driver.set(new ChromeDriver(chromeOptions));
-                    break;
 
+                    // JavaScript to hide ads
+                    //
+                    String jsScript = "document.querySelectorAll('.ad-element').forEach(el => el.style.display = 'none');";
+
+                    chromeOptions.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
+                    chromeOptions.setExperimentalOption("useAutomationExtension", false);
+
+                    // Create a new ChromeDriver instance with the configured options
+                    ChromeDriver chromeDriver = new ChromeDriver(chromeOptions);
+
+                    // Execute JavaScript
+                    JavascriptExecutor jsExecutor = (JavascriptExecutor) chromeDriver;
+                    jsExecutor.executeScript(jsScript);
+
+                    // Set the driver in the ThreadLocal
+                    driver.set(chromeDriver);
+                    break;
                 case EDGE:
                     driver.set(new EdgeDriver());
                     break;

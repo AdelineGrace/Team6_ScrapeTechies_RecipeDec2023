@@ -22,9 +22,9 @@ public class FileManager {
 		 return (configReader == null) ? new ConfigReader() : configReader;
 	 }
 	 
-	 public ExcelWriter getExcelWriter() {
-		 return (excelWriter == null) ? new ExcelWriter(null) : excelWriter;
-	 }
+//	 public ExcelWriter getExcelWriter() {
+//		 return (excelWriter == null) ? new ExcelWriter(null,) : excelWriter;
+//	 }
 	 
 	 public ExcelReader getExcelReader() {
 		 return (excelReader == null) ? new ExcelReader(null) : excelReader;
