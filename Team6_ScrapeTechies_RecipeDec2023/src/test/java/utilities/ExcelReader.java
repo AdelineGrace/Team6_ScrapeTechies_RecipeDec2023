@@ -10,8 +10,8 @@ import java.util.List;
 
 public class ExcelReader {
 
-    private String filePath;
-    private Workbook workbook;
+    String filePath;
+    Workbook workbook;
     
     public ExcelReader(String filePath) {
         this.filePath = filePath;

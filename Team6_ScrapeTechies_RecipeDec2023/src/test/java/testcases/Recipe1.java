@@ -5,19 +5,19 @@ import java.io.IOException;
 import java.util.List;
 import org.testng.annotations.*;
 import managers.DriverManager;
-import managers.FileManager;
 import utilities.ConfigReader;
 import utilities.ExcelWriter;
 
 public class Recipe1 {
 	static DriverManager driverManager = new DriverManager();
     static ExcelWriter excelWriter;  
+    static ConfigReader configReader = new ConfigReader();
 
     @BeforeMethod
     public static void setUp() {
         driverManager.getDriver();
-        driverManager.getDriver().get(FileManager.getInstance().getConfigReader().getWebUrl());
-        excelWriter = new ExcelWriter("src/test/resources/Data/Recipe-filters-ScrapperHackathon.xlsx");
+        driverManager.getDriver().get(configReader.getWebUrl());
+        excelWriter = new ExcelWriter("src/test/resources/Data/Recipe-filters-ScrapperHackathon.xlsx", false);
         List<String> headers = List.of(
                 "Recipe ID",
                 "Recipe Name",
@@ -31,7 +31,7 @@ public class Recipe1 {
                 "Targeted morbid conditions",
                 "Recipe URL"
         );
-        excelWriter.writeHeader(headers);
+        //excelWriter.writeHeader(headers);
     }
     
     @Test
@@ -42,7 +42,7 @@ public class Recipe1 {
     @AfterMethod
     public static void tearDown() throws IOException {
         driverManager.getDriver().quit();
-        excelWriter.saveFile();  
+        //excelWriter.SaveFile();  
     }
 
    

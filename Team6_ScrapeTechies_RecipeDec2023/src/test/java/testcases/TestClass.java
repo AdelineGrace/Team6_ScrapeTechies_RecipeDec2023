@@ -7,7 +7,7 @@ public class TestClass extends BaseClass {
 
 
 	@Test
-	public void Test1() 
+ 	public void Test1() 
 	{
 		Log.info("Started");
 		homePage.GoToHomePage();
