@@ -1,6 +1,8 @@
 package managers;
 
 import org.openqa.selenium.WebDriver;
+
+import pages.AtoZPage;
 import pages.HomePage;
 import pages.RecipePage;
 import pages.SearchResultsPage;
@@ -12,6 +14,7 @@ public class PageObjectManager {
 	private HomePage homePage;
 	private RecipePage recipePage;
 	private SearchResultsPage searchResultsPage;
+	private AtoZPage atoZPage;
 	
 	
 	public PageObjectManager(WebDriver driver) 
@@ -32,6 +35,11 @@ public class PageObjectManager {
 	public SearchResultsPage getSearchResultsPage()
 	{
 		return (searchResultsPage == null) ? searchResultsPage = new SearchResultsPage(driver) : searchResultsPage;
+	}
+	
+	public AtoZPage getAtoZPage()
+	{
+		return (atoZPage == null) ? atoZPage = new AtoZPage(driver) : atoZPage;
 	}
 	
 }
