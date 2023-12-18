@@ -1,33 +1,32 @@
 package pages;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
 import model.Recipe;
+import utilities.ExcelData;
+import utilities.ExcelReader;
+import utilities.ExcelWriter;
 import utilities.Log;
 
 public class RecipePage {
 
 	WebDriver driver;
+	ExcelWriter excelWriter;
+	ExcelReader excelReader;
 
-	@FindBy(xpath = "//time[@itemprop='prepTime']")
-	WebElement recipePrepTime;
-	@FindBy(xpath = "//time[@itemprop='cookTime']")
-	WebElement recipeCookingTime;
 	@FindBy(id = "rcpnuts")
 	WebElement nutrientsLst;
 	@FindBy(xpath = "//span[@itemprop='recipeIngredient']/a")
 	List<WebElement> lstIngredients;
-	@FindBy(id = "recipe_tags")
-	WebElement recipeTags;
+	@FindBy(id = "recipe_small_steps")
+	WebElement recipeSteps;
+	
+	WebElement recipeTypeSection;
 
 	public RecipePage(WebDriver driver) {
 		this.driver = driver;
@@ -50,9 +49,6 @@ public class RecipePage {
 			recipe.nutritionValue = GetNutrientValues();
 			Log.info(recipe.nutritionValue);
 
-			// Get recipe ingredients
-			recipe.ingredients = GetRecipeIngredients();
-
 			// Get recipe tags to calculate recipe category and food category
 			String recipeTags = GetRecipeTags();
 
@@ -60,51 +56,94 @@ public class RecipePage {
 			recipe.recipeCategory = GetRecipeCategory(recipe.recipeName, recipeTags);
 			Log.info(recipe.recipeCategory);
 
-			// Go back to list of recipes
-			driver.navigate().back();
-			driver.navigate().back();
-		} 
-		catch (Exception ex) 
-		{
+			// Calculate food category based on recipe name and tags
+			recipe.foodCategory = GetFoodCategory(recipe.recipeName, recipeTags);
+			Log.info(recipe.foodCategory);
+
+			// Get recipe ingredients
+			recipe.ingredients = GetRecipeIngredients();
+			Log.info(recipe.ingredients);
+
+			// Get Recipe steps
+			recipe.preparationMethod = GetRecipeSteps();
+			Log.info(recipe.preparationMethod);
+
+			// calculate target condition based on ingredients and input list of eliminations
+			recipe.targetCondition = GetTargetCondition(recipe.ingredients);
+			Log.info(recipe.targetCondition);
+
+		} catch (Exception ex) {
 			Log.info(ex.getMessage());
-			
-			// Go back to list of recipes
+
+		} finally {
+			Log.info("In finally");
+			// if (recipe.targetCondition != null && !recipe.targetCondition.isEmpty()) {
+			if (excelWriter == null)
+				excelWriter = new ExcelWriter("src/test/resources/Data/Recipe-filters-ScrapperHackathon.xlsx", false);
+			BatchWriteRecipesToExcel(recipe);
+			Log.info("Recipe added to excel");
+			// }
+
 			driver.navigate().back();
-			driver.navigate().back();
+			//driver.navigate().back();
 		}
 
 		return recipe;
 	}
 
+	private boolean containsEliminatedIngredient(String recipeIngredients, List<String> eliminatedIngredients) {
+		return eliminatedIngredients.stream().anyMatch(recipeIngredients::contains);
+	}
+
+	public String GetRecipeIngredients() {
+		String strIngredients = "";
+		for (WebElement ingredient : lstIngredients) {
+			if (strIngredients.isEmpty())
+				strIngredients = ingredient.getText();
+			else
+				strIngredients = strIngredients + ", " + ingredient.getText();
+		}
+		return strIngredients;
+	}
+
+	public String GetRecipeSteps() {
+		return recipeSteps.getText();
+	}
+
+	private void BatchWriteRecipesToExcel(Recipe recipe) {
+		int batchSize = 10;
+
+		// if (excelWriter == null) {
+		excelWriter = new ExcelWriter("src/test/resources/Data/Recipe-filters-ScrapperHackathon.xlsx", false);
+		// }
+
+		excelWriter.writeToExcel(recipe);
+
+		if (excelWriter.getCurrentBatchSize() >= batchSize) {
+			excelWriter.saveBatch();
+		}
+	}
+
 	public String GetRecipePrepTime() {
-		((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", recipePrepTime);
-		return recipePrepTime.getText();
+		recipeTypeSection = driver.findElement(By.xpath("//div[@id='ctl00_cntrightpanel_pnlRecipeScale']/section"));
+		
+		return recipeTypeSection.findElement(By.xpath(".//time[@itemprop='prepTime']")).getText();
 	}
 
 	public String GetRecipeCookingTime() {
-		return recipeCookingTime.getText();
+		return recipeTypeSection.findElement(By.xpath(".//time[@itemprop='cookTime']")).getText();
 	}
 
 	public String GetNutrientValues() {
 		try {
-			return driver.findElement(By.xpath("//span[@itemprop='calories']")).getText();
+			return nutrientsLst.getText();
 		} catch (Exception ex) {
 			return "NA";
 		}
 	}
 
-	public List<String> GetRecipeIngredients() {
-		List<String> lstIng = new ArrayList<>();
-
-		for (WebElement ingredient : lstIngredients) {
-			lstIng.add(ingredient.getText());
-		}
-
-		return lstIng;
-	}
-
 	public String GetRecipeTags() {
-		return recipeTags.getText();
+		return recipeTypeSection.findElement(By.id("recipe_tags")).getText();
 	}
 
 	public String GetRecipeCategory(String recipeName, String recipeTags) {
@@ -114,7 +153,7 @@ public class RecipePage {
 			recipeCategory = "Vegan";
 		else if (recipeName.contains("Jain") || recipeTags.contains("Jain"))
 			recipeCategory = "Jain";
-		else if (recipeName.contains("Egg") || recipeTags.contains("Egg"))
+		else if (recipeName.contains("Egg ") || recipeTags.contains("Egg "))
 			recipeCategory = "Eggitarian";
 		else if (recipeName.contains("NonVeg") || recipeTags.contains("NonVeg"))
 			recipeCategory = "Non-veg";
@@ -122,5 +161,36 @@ public class RecipePage {
 			recipeCategory = "Vegetarian";
 
 		return recipeCategory;
+	}
+
+	public String GetFoodCategory(String recipeName, String recipeTags) {
+		String foodCategory = "";
+
+		if (recipeName.contains("Breakfast") || recipeTags.contains("Breakfast"))
+			foodCategory = "Breakfast";
+		else if (recipeName.contains("Lunch") || recipeTags.contains("Lunch"))
+			foodCategory = "Lunch";
+		else if (recipeName.contains("Dinner") || recipeTags.contains("Dinner"))
+			foodCategory = "Dinner";
+		else
+			foodCategory = "Snacks";
+
+		return foodCategory;
+	}
+	
+	public String GetTargetCondition(String ingredients)
+	{
+		String targetCondition = "";
+		
+		if (!containsEliminatedIngredient(ingredients, ExcelData.DiabetesEliminate))
+			targetCondition = "Diabetes";
+		if (!containsEliminatedIngredient(ingredients, ExcelData.HypothyroidismEliminate))
+			targetCondition = "Hypothyroidism";
+		if (!containsEliminatedIngredient(ingredients, ExcelData.HypertensionEliminate))
+			targetCondition = "Hypertension";
+		if (!containsEliminatedIngredient(ingredients, ExcelData.PCOSEliminate))
+			targetCondition = "PCOS";
+		
+		return targetCondition;
 	}
 }

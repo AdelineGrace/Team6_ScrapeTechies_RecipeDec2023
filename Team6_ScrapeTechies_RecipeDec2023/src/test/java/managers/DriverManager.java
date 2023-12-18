@@ -7,6 +7,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import enums.BrowserType;
+import utilities.ConfigReader;
 
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -14,9 +15,10 @@ public class DriverManager {
 
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     private BrowserType browserType;
+    private static ConfigReader configReader = new ConfigReader();
 
     public DriverManager() {
-        browserType = FileManager.getInstance().getConfigReader().getBrowserType();
+        browserType = configReader.getBrowserType();
     }
 
     public WebDriver getDriver() {
@@ -29,7 +31,7 @@ public class DriverManager {
 
                 case CHROME:
                     ChromeOptions chromeOptions = new ChromeOptions();
-                    //chromeOptions.addArguments("--headless"); // Run Chrome in headless mode
+                    chromeOptions.addArguments("--headless"); // Run Chrome in headless mode
                     //chromeOptions.addArguments("--disable-popup-blocking"); // Disable popup blocking
                     chromeOptions.addArguments("--disable-extensions"); // Disable popup blocking
                     chromeOptions.addArguments("--blink-settings=imagesEnabled=false");
@@ -43,7 +45,7 @@ public class DriverManager {
         }
         driver.get().manage().deleteAllCookies();
         driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
-        driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
+        driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(60));
         driver.get().manage().window().maximize();
         
         return driver.get();
