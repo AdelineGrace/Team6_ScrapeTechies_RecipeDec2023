@@ -18,19 +18,19 @@ public class Recipe1 {
         driverManager.getDriver();
         driverManager.getDriver().get(configReader.getWebUrl());
         excelWriter = new ExcelWriter("src/test/resources/Data/Recipe-filters-ScrapperHackathon.xlsx", false);
-        List<String> headers = List.of(
-                "Recipe ID",
-                "Recipe Name",
-                "Recipe Category",
-                "Food Category",
-                "Ingredients",
-                "Preparation Time",
-                "Cooking Time",
-                "Preparation method",
-                "Nutrient values",
-                "Targeted morbid conditions",
-                "Recipe URL"
-        );
+//        List<String> headers = List.of(
+//                "Recipe ID",
+//                "Recipe Name",
+//                "Recipe Category",
+//                "Food Category",
+//                "Ingredients",
+//                "Preparation Time",
+//                "Cooking Time",
+//                "Preparation method",
+//                "Nutrient values",
+//                "Targeted morbid conditions",
+//                "Recipe URL"
+//        );
         //excelWriter.writeHeader(headers);
     }
     
