@@ -13,5 +13,6 @@ public class Recipe {
 	public String nutritionValue;
 	public String targetCondition;
 	public String recipeURL;
-
+	public Boolean toAdd;
+	public Boolean NoAllergies;
 }
