@@ -59,6 +59,7 @@ public class AtoZPage {
 				Log.info("No. of recipes found so far " + lstRecipe.size());
 			} catch (Exception ex) {
 				Log.info(ex.getMessage());
+				Log.info("page " + i + "catch block - " + driver.getTitle());
 			}
 		}
 
