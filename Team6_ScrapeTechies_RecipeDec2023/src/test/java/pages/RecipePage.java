@@ -86,7 +86,7 @@ public class RecipePage {
 			Log.info("To add - " + recipe.toAdd);
 
 			// calculate no allergies status based on ingredients
-			recipe.NoAllergies = GetNoAllergiesStatus(recipe.ingredients);
+			recipe.NoAllergies = GetNoAllergiesStatus(recipe.ingredients, recipe.targetCondition);
 			Log.info("No Allergy - " + recipe.NoAllergies);
 
 		} catch (Exception ex) {
@@ -142,7 +142,9 @@ public class RecipePage {
 
 	private boolean containsIngredient(String recipeIngredients, List<String> ingredientsToCheck) {
 		List<String> recipeIng = Arrays.asList(recipeIngredients.split(", "));
-		return recipeIng.stream().anyMatch(recipeIngredient-> ingredientsToCheck.stream().anyMatch(ingToCheck->StringUtils.containsIgnoreCase(recipeIngredient,ingToCheck)));
+		return recipeIng.stream()
+				.anyMatch(recipeIngredient-> ingredientsToCheck.stream()
+				.anyMatch(ingToCheck->StringUtils.containsIgnoreCase(ingToCheck,recipeIngredient)));
 	}
 
 	public String GetRecipeIngredients() {
@@ -255,19 +257,19 @@ public class RecipePage {
 	public Boolean GetToAddStatus(String ingredients, String targetCondition) {
 		Boolean toAddStatus = false;
 
-		if ((targetCondition == "Diabetes" && containsIngredient(ingredients, ExcelData.DiabetesToAdd))
-			|| (targetCondition == "Hypothyroidism" && containsIngredient(ingredients, ExcelData.HypothyroidismToAdd))
-			|| (targetCondition == "Hypertension" && containsIngredient(ingredients, ExcelData.HypertensionToAdd))
-			|| (targetCondition == "PCOS" && containsIngredient(ingredients, ExcelData.PCOSToAdd)))
+		if ((targetCondition.contains("Diabetes") && containsIngredient(ingredients, ExcelData.DiabetesToAdd))
+			|| (targetCondition.contains("Hypothyroidism") && containsIngredient(ingredients, ExcelData.HypothyroidismToAdd))
+			|| (targetCondition.contains("Hypertension") && containsIngredient(ingredients, ExcelData.HypertensionToAdd))
+			|| (targetCondition.contains("PCOS") && containsIngredient(ingredients, ExcelData.PCOSToAdd)))
 				toAddStatus = true;
 			
 		return toAddStatus;
 	}
 
-	public Boolean GetNoAllergiesStatus(String ingredients) {
+	public Boolean GetNoAllergiesStatus(String ingredients, String targetCondition) {
 		Boolean NoAllergiesStatus = false;
 
-		if (!containsIngredient(ingredients, ExcelData.AllergiesToFilter))
+		if (!containsIngredient(ingredients, ExcelData.AllergiesToFilter) && !targetCondition.isEmpty() && !targetCondition.isBlank())
 			NoAllergiesStatus = true;
 
 		return NoAllergiesStatus;
