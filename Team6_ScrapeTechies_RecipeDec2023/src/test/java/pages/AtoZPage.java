@@ -29,7 +29,7 @@ public class AtoZPage {
 	public List<Recipe> GetAllRecipes(List<Recipe> lstRecipe) {
 		// Get recipes for each recipe card on page
 		for (int i = 1; i <= recipeCards.size(); i++) {
-			
+			//for (int i = 1; i <= 3; i++) {
 			// New recipe object
 			Recipe recipe = new Recipe();
 
@@ -51,7 +51,8 @@ public class AtoZPage {
 				// Click on the recipe name/link
 				((JavascriptExecutor) driver).executeScript("arguments[0].click();", recipeLink);
 
-				recipePage = new RecipePage(driver);
+				if(recipePage == null)
+					recipePage = new RecipePage(driver);
 				recipe = recipePage.GetRecipeDetails(recipe);
 
 				lstRecipe.add(recipe);
@@ -69,7 +70,7 @@ public class AtoZPage {
 		//WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
 		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='A']")));
 
-		for (char letter = 'B'; letter <= 'B'; letter++) {
+		for (char letter = 'F'; letter <= 'Z'; letter++) {
 			try {
 				if (letter != 'A') {
 					Log.info("looking for " + letter);
@@ -83,8 +84,8 @@ public class AtoZPage {
 
 				List<WebElement> pagination = driver.findElements(By.xpath("//div[contains(text(),'Goto Page')][1]/a"));
 
-				// for (int i = 2; i <= pagination.size(); i++) {
-				for (int i = 4; i <= 4; i++) {
+				 for (int i = 1; i <= pagination.size(); i++) {
+				//for (int i = 4; i <= 4; i++) {
 					try {
 						if (i != 1) {
 							Log.info("looking for page " + i);

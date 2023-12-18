@@ -71,7 +71,7 @@ public class ExcelWriter {
             switch (i) {
                 case 0:
                     cellValue.setCellValue(recipe.recipeId);
-                    break;
+              
                 case 1:
                     cellValue.setCellValue(recipe.recipeName);
                     break;

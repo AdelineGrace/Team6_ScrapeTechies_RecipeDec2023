@@ -36,7 +36,8 @@ public class BaseClass {
 		atoZPage = testContext.getPageObjectManager().getAtoZPage();
 		
 		ExcelData.LoadEliminationData();
-		
+		ExcelData.LoadToAddData();
+		ExcelData.LoadAllergiesData();
 	}
 	
 
