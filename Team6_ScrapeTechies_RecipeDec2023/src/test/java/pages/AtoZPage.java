@@ -82,7 +82,7 @@ public class AtoZPage {
 		List<Recipe> lstRecipe = new ArrayList<>();
 		
 		// Traverse recipe pages from A to Z
-		for (char letter = 'A'; letter <= 'Z'; letter++) 
+		for (char letter = 'O'; letter <= 'Q'; letter++) 
 		{
 			try {
 				// Dont need to change page for A
