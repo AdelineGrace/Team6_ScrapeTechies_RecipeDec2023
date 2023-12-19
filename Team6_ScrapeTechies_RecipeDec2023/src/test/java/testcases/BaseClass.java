@@ -1,15 +1,11 @@
 package testcases;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import context.TestContext;
 import pages.*;
 import utilities.ConfigReader;
 import utilities.ExcelData;
 import utilities.ExcelReader;
 import utilities.ExcelWriter;
-import model.Recipe;
 
 public class BaseClass {
 	
@@ -23,18 +19,16 @@ public class BaseClass {
 	static ExcelWriter excelWriter;
 	static ExcelReader eliminateAddExcelReader;
 	
-	static List<Recipe> lstRecipe = new ArrayList<>();
-	
-	
-	
 	public BaseClass()
 	{
+		ConfigReader.loadProperty();
+		
 		testContext = new TestContext();
 		
 		homePage = testContext.getPageObjectManager().getHomePage();
 		recipePage = testContext.getPageObjectManager().getRecipePage();
 		atoZPage = testContext.getPageObjectManager().getAtoZPage();
-		
+	
 		ExcelData.LoadEliminationData();
 		ExcelData.LoadToAddData();
 		ExcelData.LoadAllergiesData();

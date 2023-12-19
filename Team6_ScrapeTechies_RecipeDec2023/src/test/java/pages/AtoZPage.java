@@ -7,36 +7,40 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
 import model.Recipe;
 import utilities.Log;
+import utilities.Screenshots;
 
 public class AtoZPage {
 
 	WebDriver driver;
 	RecipePage recipePage;
 
-	@FindBy(xpath = "//div[contains(@class,'recipecard')]")
-	List<WebElement> recipeCards;
-
-	public AtoZPage(WebDriver driver) {
+	public AtoZPage(WebDriver driver) 
+	{
 		this.driver = driver;
-		PageFactory.initElements(driver, this);
 	}
 
-	public List<Recipe> GetAllRecipes(List<Recipe> lstRecipe) {
+	///
+	// This method gets all the recipe details and writes to excel based on the required filters
+	///
+	public void GetRecipesOnPage() 
+	{
+		List<Recipe> lstRecipe = new ArrayList<>();
+		
+		// Get all recipes on the page 
+		List<WebElement> recipeCards = driver.findElements(By.xpath("//div[contains(@class,'recipecard')]"));
+		
 		// Get recipes for each recipe card on page
-		for (int i = 1; i <= recipeCards.size(); i++) {
-			//for (int i = 1; i <= 3; i++) {
+		for (int i = 1; i <= recipeCards.size(); i++) 
+		{
 			// New recipe object
 			Recipe recipe = new Recipe();
 
 			try {
 				// Scroll to the card
 				WebElement recipeCard = driver.findElement(By.xpath("//div[contains(@class,'recipecard')][" + i + "]"));
-				//((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", recipeCard);
 
 				// Get the recipe id
 				WebElement recipeNo = recipeCard.findElement(By.xpath(".//span[contains(text(),'Recipe#')]"));
@@ -51,29 +55,38 @@ public class AtoZPage {
 				// Click on the recipe name/link
 				((JavascriptExecutor) driver).executeScript("arguments[0].click();", recipeLink);
 
+				// Fetch other recipe details and write to excel based on the filter
 				if(recipePage == null)
 					recipePage = new RecipePage(driver);
-				recipe = recipePage.GetRecipeDetails(recipe);
+				recipe = recipePage.GetRecipeDetailsAndWriteToExcel(recipe);
 
+				// Add recipe to the list
 				lstRecipe.add(recipe);
+				
+				// Get count of recipes scraped from website without filters
 				Log.info("No. of recipes found so far " + lstRecipe.size());
-			} catch (Exception ex) {
+			} 
+			catch (Exception ex) 
+			{
 				Log.info(ex.getMessage());
 				Log.info("page " + i + "catch block - " + driver.getTitle());
+				Screenshots.CaptureScreenshot(driver);
 			}
 		}
-
-		return lstRecipe;
 	}
 
-	public List<Recipe> PagesLogic() {
-		List<Recipe> lstRecipe = new ArrayList<Recipe>();
-		//WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
-		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='A']")));
-
-		for (char letter = 'R'; letter <= 'V'; letter++) {
+	///
+	// Gets all the recipes from all the pages on A to Z page 
+	///
+	public void GetAllRecipes() 
+	{
+		// Traverse recipe pages from A to Z
+		for (char letter = 'A'; letter <= 'Z'; letter++) 
+		{
 			try {
-				if (letter != 'A') {
+				// Dont need to change page for A
+				if (letter != 'A') 
+				{
 					Log.info("looking for " + letter);
 
 					WebElement letterElement = driver
@@ -83,16 +96,16 @@ public class AtoZPage {
 					Log.info("clicked on " + letter);
 				}
 
+				// Numerical Pagination on each Alphabetical page
 				List<WebElement> pagination = driver.findElements(By.xpath("//div[contains(text(),'Goto Page')][1]/a"));
 
-				 for (int i = 1; i <= pagination.size(); i++) {
-				//for (int i = 1; i <= 4; i++) {
+				 for (int i = 1; i <= pagination.size(); i++) 
+				 {
 					try {
+						// Dont need to change for page 1
 						if (i != 1) {
 							Log.info("looking for page " + i);
 
-							//wait.until(ExpectedConditions.visibilityOfElementLocated(
-									//By.xpath("//*[@id='maincontent']/div[1]/div[2]/a[" + i + "]")));
 							WebElement pagei = driver
 									.findElement(By.xpath("//*[@id='maincontent']/div[1]/div[2]/a[" + i + "]"));
 
@@ -100,18 +113,24 @@ public class AtoZPage {
 							Log.info("clicked on page " + i);
 
 						}
-					} catch (Exception ex) {
+					} 
+					catch (Exception ex) 
+					{
 						Log.info(ex.getMessage());
+						Screenshots.CaptureScreenshot(driver);
 					}
-					lstRecipe = GetAllRecipes(lstRecipe);
+					
+					// Gets all the recipe details
+					GetRecipesOnPage();
 				}
 
-			} catch (Exception ex) {
+			} 
+			catch (Exception ex) 
+			{
 				Log.info(ex.getMessage());
+				Screenshots.CaptureScreenshot(driver);
 			}
 		}
-
-		return lstRecipe;
 	}
 
 }

@@ -21,7 +21,7 @@ public class ExcelData {
 	
 	public static void LoadEliminationData()
 	{
-		excelReader = new ExcelReader("src/test/resources/Data/IngredientsAndComorbidities-ScrapperHackathon.xlsx");
+		excelReader = new ExcelReader(ConfigReader.getIngredientsInputExcelPath());
 		DiabetesEliminate = excelReader.readColumnFromExcel(0);
 		HypothyroidismEliminate = excelReader.readColumnFromExcel(2);
 		HypertensionEliminate = excelReader.readColumnFromExcel(4);
@@ -30,7 +30,7 @@ public class ExcelData {
 	
 	public static void LoadToAddData()
 	{
-		excelReader = new ExcelReader("src/test/resources/Data/IngredientsAndComorbidities-ScrapperHackathon.xlsx");
+		excelReader = new ExcelReader(ConfigReader.getIngredientsInputExcelPath());
 		DiabetesToAdd = excelReader.readColumnFromExcel(1);
 		HypothyroidismToAdd = excelReader.readColumnFromExcel(3);
 		HypertensionToAdd = excelReader.readColumnFromExcel(5);
@@ -39,7 +39,7 @@ public class ExcelData {
 	
 	public static void LoadAllergiesData()
 	{
-		excelReader = new ExcelReader("src/test/resources/Data/Allergies.xlsx");
+		excelReader = new ExcelReader(ConfigReader.getAllergiesInputExcelPath());
 		AllergiesToFilter = excelReader.readColumnFromExcel(1);
 	}
 }

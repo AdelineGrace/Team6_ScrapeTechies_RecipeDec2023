@@ -15,10 +15,9 @@ public class DriverManager {
 
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
     private BrowserType browserType;
-    private static ConfigReader configReader = new ConfigReader();
 
     public DriverManager() {
-        browserType = configReader.getBrowserType();
+        browserType = ConfigReader.getBrowserType();
     }
 
     public WebDriver getDriver() {
@@ -45,8 +44,8 @@ public class DriverManager {
             }
         }
         driver.get().manage().deleteAllCookies();
-        driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(90));
-        driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(90));
+        driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(ConfigReader.getImplicitWait()));
+        driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(ConfigReader.getPageLoadWait()));
         driver.get().manage().window().maximize();
         
         return driver.get();
