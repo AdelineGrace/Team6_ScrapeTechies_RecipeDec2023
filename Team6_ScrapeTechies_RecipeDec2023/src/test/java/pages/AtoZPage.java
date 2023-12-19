@@ -25,10 +25,8 @@ public class AtoZPage {
 	///
 	// This method gets all the recipe details and writes to excel based on the required filters
 	///
-	public void GetRecipesOnPage() 
+	public List<Recipe> GetRecipesOnPage(List<Recipe> lstRecipe) 
 	{
-		List<Recipe> lstRecipe = new ArrayList<>();
-		
 		// Get all recipes on the page 
 		List<WebElement> recipeCards = driver.findElements(By.xpath("//div[contains(@class,'recipecard')]"));
 		
@@ -73,6 +71,7 @@ public class AtoZPage {
 				Screenshots.CaptureScreenshot(driver);
 			}
 		}
+		return lstRecipe;
 	}
 
 	///
@@ -80,6 +79,8 @@ public class AtoZPage {
 	///
 	public void GetAllRecipes() 
 	{
+		List<Recipe> lstRecipe = new ArrayList<>();
+		
 		// Traverse recipe pages from A to Z
 		for (char letter = 'A'; letter <= 'Z'; letter++) 
 		{
@@ -121,7 +122,7 @@ public class AtoZPage {
 					}
 					
 					// Gets all the recipe details
-					GetRecipesOnPage();
+					lstRecipe = GetRecipesOnPage(lstRecipe);
 				}
 
 			} 
