@@ -1,9 +1,9 @@
 package enums;
 
 public enum RecipeCategory {
-	Vegan,
-	Jain,
-	Eggitarian,
-	NonVeg,
-	Vegetarian
+	VEGAN,
+	JAIN,
+	EGGITARIAN,
+	NONVEGETARIAN,
+	VEGETARIAN
 }

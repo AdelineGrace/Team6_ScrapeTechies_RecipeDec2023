@@ -193,15 +193,15 @@ public class RecipePage {
 	public RecipeCategory GetRecipeCategory(String recipeName, String recipeTags) 
 	{
 		if (recipeName.contains("Vegan") || recipeTags.contains("Vegan"))
-			return RecipeCategory.Vegan;
+			return RecipeCategory.VEGAN;
 		else if (recipeName.contains("Jain") || recipeTags.contains("Jain"))
-			return RecipeCategory.Jain;
+			return RecipeCategory.JAIN;
 		else if (recipeName.contains("Egg ") || recipeTags.contains("Egg "))
-			return RecipeCategory.Eggitarian;
+			return RecipeCategory.EGGITARIAN;
 		else if (recipeName.contains("NonVeg") || recipeTags.contains("NonVeg"))
-			return RecipeCategory.NonVeg;
+			return RecipeCategory.NONVEGETARIAN;
 		else
-			return RecipeCategory.Vegetarian;
+			return RecipeCategory.VEGETARIAN;
 	}
 
 	///
@@ -210,13 +210,13 @@ public class RecipePage {
 	public FoodCategory GetFoodCategory(String recipeName, String recipeTags) 
 	{
 		if (recipeName.contains("Breakfast") || recipeTags.contains("Breakfast"))
-			return FoodCategory.Breakfast;
+			return FoodCategory.BREAKFAST;
 		else if (recipeName.contains("Lunch") || recipeTags.contains("Lunch"))
-			return FoodCategory.Lunch;
+			return FoodCategory.LUNCH;
 		else if (recipeName.contains("Dinner") || recipeTags.contains("Dinner"))
-			return FoodCategory.Dinner;
+			return FoodCategory.DINNER;
 		else
-			return FoodCategory.Snacks;
+			return FoodCategory.SNACKS;
 	}
 	
 	///
@@ -240,11 +240,11 @@ public class RecipePage {
 		String targetCondition = "";
 
 		if (!containsIngredient(ingredients, ExcelData.DiabetesEliminate))
-			targetConditions.add(TargettedMorbidConditions.Diabetes.toString());
+			targetConditions.add(TargettedMorbidConditions.DIABETES.toString());
 		if (!containsIngredient(ingredients, ExcelData.HypothyroidismEliminate))
-			targetConditions.add(TargettedMorbidConditions.Hypothyroidism.toString());
+			targetConditions.add(TargettedMorbidConditions.HYPOTHYROIDISM.toString());
 		if (!containsIngredient(ingredients, ExcelData.HypertensionEliminate))
-			targetConditions.add(TargettedMorbidConditions.Hypertension.toString());
+			targetConditions.add(TargettedMorbidConditions.HYPERTENSION.toString());
 		if (!containsIngredient(ingredients, ExcelData.PCOSEliminate))
 			targetConditions.add(TargettedMorbidConditions.PCOS.toString());
 
