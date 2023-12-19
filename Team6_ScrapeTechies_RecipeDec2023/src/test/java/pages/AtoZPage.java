@@ -71,7 +71,7 @@ public class AtoZPage {
 		//WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(90));
 		//wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//a[text()='A']")));
 
-		for (char letter = 'A'; letter <= 'Z'; letter++) {
+		for (char letter = 'Z'; letter >= 'A'; letter--) {
 			try {
 				if (letter != 'A') {
 					Log.info("looking for " + letter);
