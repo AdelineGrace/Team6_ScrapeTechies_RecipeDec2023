@@ -2,8 +2,8 @@ package enums;
 
 public enum TargettedMorbidConditions {
 
-	DIABETES,
-	HYPERTENSION,
-	HYPOTHYROIDISM,
+	Diabetes,
+	Hypertension,
+	Hypothyroidism,
 	PCOS
 }
