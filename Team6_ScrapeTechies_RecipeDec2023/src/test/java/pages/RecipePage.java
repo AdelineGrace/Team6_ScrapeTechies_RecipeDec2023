@@ -88,48 +88,14 @@ public class RecipePage {
 			// calculate no allergies status based on ingredients
 			recipe.NoAllergies = GetNoAllergiesStatus(recipe.ingredients, recipe.targetCondition);
 			Log.info("No Allergy - " + recipe.NoAllergies);
+			
+			WriteRecipeToExcels(recipe);
 
 		} catch (Exception ex) {
 			Log.info(ex.getMessage());
 
 		} finally {
 			Log.info("In finally");
-
-			// Write all recipes to excel
-			if (excelWriter == null)
-				excelWriter = new ExcelWriter1("src/test/resources/Output/AllRecipes.xlsx",
-						"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
-			
-				excelWriter.WriteRecipeToExcel(recipe);
-				Log.info("Recipe added to excel");
-			
-
-			// Write Elimination excel
-			if (excelWriterEliminate == null)
-				excelWriterEliminate = new ExcelWriter1("src/test/resources/Output/Recipe-filters-Elimination.xlsx",
-						"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
-			if (recipe.targetCondition != null && !recipe.targetCondition.isEmpty()) {
-				excelWriterEliminate.WriteRecipeToExcel(recipe);
-				Log.info("Recipe added to excel");
-			}
-
-			// Write To Add excel
-			if (excelWriterToAdd == null)
-				excelWriterToAdd = new ExcelWriter1("src/test/resources/Output/Recipe-filters-ToAdd.xlsx",
-						"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
-			if (recipe.targetCondition != null && !recipe.targetCondition.isEmpty() && recipe.toAdd) {
-				excelWriterToAdd.WriteRecipeToExcel(recipe);
-				Log.info("Recipe added to to add excel");
-			}
-
-			// Write To Add excel
-			if (excelWriterAllergies == null)
-				excelWriterAllergies = new ExcelWriter1("src/test/resources/Output/Recipe-filters-Allergies.xlsx",
-						"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
-			if (recipe.NoAllergies) {
-				excelWriterAllergies.WriteRecipeToExcel(recipe);
-				Log.info("Recipe added to to allergies excel");
-			}
 
 			driver.navigate().back();
 
@@ -273,5 +239,44 @@ public class RecipePage {
 			NoAllergiesStatus = true;
 
 		return NoAllergiesStatus;
+	}
+	
+	public void WriteRecipeToExcels(Recipe recipe)
+	{
+		// Write all recipes to excel
+					if (excelWriter == null)
+						excelWriter = new ExcelWriter1("src/test/resources/Output/AllRecipes.xlsx",
+								"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
+					
+						excelWriter.WriteRecipeToExcel(recipe);
+						Log.info("Recipe added to excel");
+					
+
+					// Write Elimination excel
+					if (excelWriterEliminate == null)
+						excelWriterEliminate = new ExcelWriter1("src/test/resources/Output/Recipe-filters-Elimination.xlsx",
+								"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
+					if (recipe.targetCondition != null && !recipe.targetCondition.isEmpty()) {
+						excelWriterEliminate.WriteRecipeToExcel(recipe);
+						Log.info("Recipe added to excel");
+					}
+
+					// Write To Add excel
+					if (excelWriterToAdd == null)
+						excelWriterToAdd = new ExcelWriter1("src/test/resources/Output/Recipe-filters-ToAdd.xlsx",
+								"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
+					if (recipe.targetCondition != null && !recipe.targetCondition.isEmpty() && recipe.toAdd) {
+						excelWriterToAdd.WriteRecipeToExcel(recipe);
+						Log.info("Recipe added to to add excel");
+					}
+
+					// Write To Add excel
+					if (excelWriterAllergies == null)
+						excelWriterAllergies = new ExcelWriter1("src/test/resources/Output/Recipe-filters-Allergies.xlsx",
+								"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
+					if (recipe.NoAllergies) {
+						excelWriterAllergies.WriteRecipeToExcel(recipe);
+						Log.info("Recipe added to to allergies excel");
+					}
 	}
 }
