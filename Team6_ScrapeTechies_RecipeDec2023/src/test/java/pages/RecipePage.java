@@ -7,48 +7,54 @@ import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 
+import enums.FoodCategory;
+import enums.RecipeCategory;
+import enums.TargettedMorbidConditions;
 import model.Recipe;
+import utilities.ConfigReader;
 import utilities.ExcelData;
 import utilities.ExcelReader;
-import utilities.ExcelWriter1;
+import utilities.ExcelWriter;
 import utilities.Log;
+import utilities.Screenshots;
+
 import org.apache.commons.lang3.StringUtils;
 
 public class RecipePage {
 
 	WebDriver driver;
-	ExcelWriter1 excelWriter;
-	ExcelWriter1 excelWriterEliminate;
-	ExcelWriter1 excelWriterToAdd;
-	ExcelWriter1 excelWriterAllergies;
+	
+	ExcelWriter excelWriter;
+	ExcelWriter excelWriterEliminate;
+	ExcelWriter excelWriterToAdd;
+	ExcelWriter excelWriterAllergies;
+	
 	ExcelReader excelReader;
-
-	@FindBy(id = "rcpnuts")
-	WebElement nutrientsLst;
-	@FindBy(xpath = "//span[@itemprop='recipeIngredient']/a")
-	List<WebElement> lstIngredients;
-	@FindBy(id = "recipe_small_steps")
-	WebElement recipeSteps;
-
+	
 	WebElement recipeTypeSection;
 
-	public RecipePage(WebDriver driver) {
+	public RecipePage(WebDriver driver) 
+	{
 		this.driver = driver;
-		PageFactory.initElements(driver, this);
 	}
 
-	public Recipe GetRecipeDetails(Recipe recipe) {
-		try {
-			// Get recipe URL, prep time, cook time
+	///
+	// This method fetches recipe details and writes to excel based on filters
+	///
+	public Recipe GetRecipeDetailsAndWriteToExcel(Recipe recipe) 
+	{
+		try 
+		{
+			// Get recipe URL
 			recipe.recipeURL = driver.getCurrentUrl();
 			Log.info(recipe.recipeURL);
 
+			// Get Recipe Prep time
 			recipe.prepTime = GetRecipePrepTime();
 			Log.info(recipe.prepTime);
 
+			// Get recipe cook time
 			recipe.cookingTime = GetRecipeCookingTime();
 			Log.info(recipe.cookingTime);
 
@@ -61,11 +67,11 @@ public class RecipePage {
 
 			// Calculate recipe category based on recipe name and tags
 			recipe.recipeCategory = GetRecipeCategory(recipe.recipeName, recipeTags);
-			Log.info(recipe.recipeCategory);
+			Log.info(recipe.recipeCategory.toString());
 
 			// Calculate food category based on recipe name and tags
 			recipe.foodCategory = GetFoodCategory(recipe.recipeName, recipeTags);
-			Log.info(recipe.foodCategory);
+			Log.info(recipe.foodCategory.toString());
 
 			// Get recipe ingredients
 			recipe.ingredients = GetRecipeIngredients();
@@ -89,50 +95,22 @@ public class RecipePage {
 			recipe.NoAllergies = GetNoAllergiesStatus(recipe.ingredients, recipe.targetCondition);
 			Log.info("No Allergy - " + recipe.NoAllergies);
 
-		} catch (Exception ex) {
+			// Write recipes to excel files based on filters
+			WriteRecipeToExcels(recipe);
+
+		} 
+		catch (Exception ex) 
+		{
 			Log.info(ex.getMessage());
-
-		} finally {
+			Screenshots.CaptureScreenshot(driver);
+		} 
+		finally 
+		{
 			Log.info("In finally");
-
-			// Write all recipes to excel
-			if (excelWriter == null)
-				excelWriter = new ExcelWriter1("src/test/resources/Output/AllRecipes.xlsx",
-						"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
-			
-				excelWriter.WriteRecipeToExcel(recipe);
-				Log.info("Recipe added to excel");
-			
-
-			// Write Elimination excel
-			if (excelWriterEliminate == null)
-				excelWriterEliminate = new ExcelWriter1("src/test/resources/Output/Recipe-filters-Elimination.xlsx",
-						"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
-			if (recipe.targetCondition != null && !recipe.targetCondition.isEmpty()) {
-				excelWriterEliminate.WriteRecipeToExcel(recipe);
-				Log.info("Recipe added to excel");
-			}
-
-			// Write To Add excel
-			if (excelWriterToAdd == null)
-				excelWriterToAdd = new ExcelWriter1("src/test/resources/Output/Recipe-filters-ToAdd.xlsx",
-						"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
-			if (recipe.targetCondition != null && !recipe.targetCondition.isEmpty() && recipe.toAdd) {
-				excelWriterToAdd.WriteRecipeToExcel(recipe);
-				Log.info("Recipe added to to add excel");
-			}
-
-			// Write To Add excel
-			if (excelWriterAllergies == null)
-				excelWriterAllergies = new ExcelWriter1("src/test/resources/Output/Recipe-filters-Allergies.xlsx",
-						"Recipe ID,Recipe Name,Recipe Category(Breakfast/lunch/snack/dinner),Food Category(Veg/non-veg/vegan/Jain),Ingredients,Preparation Time,Cooking Time,Preparation method,Nutrient values,Targetted morbid conditions (Diabeties/Hypertension/Hypothyroidism),Recipe URL");
-			if (recipe.NoAllergies) {
-				excelWriterAllergies.WriteRecipeToExcel(recipe);
-				Log.info("Recipe added to to allergies excel");
-			}
 
 			driver.navigate().back();
 
+			// If there is an ad
 			if (!driver.getCurrentUrl().contains("AtoZ"))
 				driver.navigate().back();
 		}
@@ -140,138 +118,225 @@ public class RecipePage {
 		return recipe;
 	}
 
-	private boolean containsIngredient(String recipeIngredients, List<String> ingredientsToCheck) {
-		List<String> recipeIng = Arrays.asList(recipeIngredients.split(", "));
-		return recipeIng.stream()
-				.anyMatch(recipeIngredient-> ingredientsToCheck.stream()
-				.anyMatch(ingToCheck->StringUtils.containsIgnoreCase(ingToCheck,recipeIngredient)));
-	}
-
-	public String GetRecipeIngredients() {
+	///
+	// This method gets the ingredient list of the recipe
+	///
+	public String GetRecipeIngredients() 
+	{
+		List<WebElement> lstIngredients = driver.findElements(By.xpath("//span[@itemprop='recipeIngredient']/a"));
+		
 		String strIngredients = "";
-		for (WebElement ingredient : lstIngredients) {
+		for (WebElement ingredient : lstIngredients) 
+		{
 			if (strIngredients.isEmpty())
 				strIngredients = ingredient.getText();
 			else
 				strIngredients = strIngredients + ", " + ingredient.getText();
 		}
+		
 		return strIngredients;
 	}
 
-	public String GetRecipeSteps() {
+	///
+	// This recipe gets the recipe steps
+	///
+	public String GetRecipeSteps() 
+	{
+		WebElement recipeSteps = driver.findElement(By.id("recipe_small_steps"));
 		return recipeSteps.getText();
 	}
 
-//	private void BatchWriteRecipesToExcel(Recipe recipe) {
-//		int batchSize = 10;
-//
-//		// if (excelWriter == null) {
-//		excelWriter = new ExcelWriter("src/test/resources/Data/Recipe-filters-ScrapperHackathon.xlsx", false);
-//		// }
-//
-//		excelWriter.writeToExcel(recipe);
-//
-//		if (excelWriter.getCurrentBatchSize() >= batchSize) {
-//			excelWriter.saveBatch();
-//		}
-//	}
-
-	public String GetRecipePrepTime() {
+	///
+	// This method gets the recipe preparation time
+	///
+	public String GetRecipePrepTime() 
+	{
 		recipeTypeSection = driver.findElement(By.xpath("//div[@id='ctl00_cntrightpanel_pnlRecipeScale']/section"));
-
 		return recipeTypeSection.findElement(By.xpath(".//time[@itemprop='prepTime']")).getText();
 	}
 
-	public String GetRecipeCookingTime() {
+	///
+	// This method gets the recipe cooking time
+	///
+	public String GetRecipeCookingTime() 
+	{
 		return recipeTypeSection.findElement(By.xpath(".//time[@itemprop='cookTime']")).getText();
 	}
 
-	public String GetNutrientValues() {
-		try {
+	///
+	// This recipe gets the recipe nutrient list
+	///
+	public String GetNutrientValues() 
+	{
+		try 
+		{
+			WebElement nutrientsLst = driver.findElement(By.id("rcpnuts"));
 			return nutrientsLst.getText();
-		} catch (Exception ex) {
+		} 
+		catch (Exception ex) 
+		{
 			return "NA";
 		}
 	}
 
-	public String GetRecipeTags() {
+	///
+	// This method gets the recipe tags to calculate Recipe category and food category
+	///
+	public String GetRecipeTags() 
+	{
 		return recipeTypeSection.findElement(By.id("recipe_tags")).getText();
 	}
 
-	public String GetRecipeCategory(String recipeName, String recipeTags) {
-		String recipeCategory = "";
-
+	///
+	// This method calculates the recipe category based on name and tags
+	///
+	public RecipeCategory GetRecipeCategory(String recipeName, String recipeTags) 
+	{
 		if (recipeName.contains("Vegan") || recipeTags.contains("Vegan"))
-			recipeCategory = "Vegan";
+			return RecipeCategory.VEGAN;
 		else if (recipeName.contains("Jain") || recipeTags.contains("Jain"))
-			recipeCategory = "Jain";
+			return RecipeCategory.JAIN;
 		else if (recipeName.contains("Egg ") || recipeTags.contains("Egg "))
-			recipeCategory = "Eggitarian";
+			return RecipeCategory.EGGITARIAN;
 		else if (recipeName.contains("NonVeg") || recipeTags.contains("NonVeg"))
-			recipeCategory = "Non-veg";
+			return RecipeCategory.NONVEGETARIAN;
 		else
-			recipeCategory = "Vegetarian";
-
-		return recipeCategory;
+			return RecipeCategory.VEGETARIAN;
 	}
 
-	public String GetFoodCategory(String recipeName, String recipeTags) {
-		String foodCategory = "";
-
+	///
+	// This method calculates the food category based on name and tags
+	///
+	public FoodCategory GetFoodCategory(String recipeName, String recipeTags) 
+	{
 		if (recipeName.contains("Breakfast") || recipeTags.contains("Breakfast"))
-			foodCategory = "Breakfast";
+			return FoodCategory.BREAKFAST;
 		else if (recipeName.contains("Lunch") || recipeTags.contains("Lunch"))
-			foodCategory = "Lunch";
+			return FoodCategory.LUNCH;
 		else if (recipeName.contains("Dinner") || recipeTags.contains("Dinner"))
-			foodCategory = "Dinner";
+			return FoodCategory.DINNER;
 		else
-			foodCategory = "Snacks";
-
-		return foodCategory;
+			return FoodCategory.SNACKS;
+	}
+	
+	///
+	// This method compares ingredient list and filter list 
+	// Returns true if there is a match
+	// Returns false if there is no match
+	///
+	private boolean containsIngredient(String recipeIngredients, List<String> ingredientsToCheck) 
+	{
+		List<String> recipeIng = Arrays.asList(recipeIngredients.split(", "));
+		return recipeIng.stream().anyMatch(recipeIngredient -> ingredientsToCheck.stream()
+				.anyMatch(ingToCheck -> StringUtils.containsIgnoreCase(ingToCheck, recipeIngredient)));
 	}
 
-	public String GetTargetCondition(String ingredients) {
+	///
+	// This method calculates the target morbid condition based on igredients and filters
+	///
+	public String GetTargetCondition(String ingredients) 
+	{
 		List<String> targetConditions = new ArrayList<>();
 		String targetCondition = "";
 
 		if (!containsIngredient(ingredients, ExcelData.DiabetesEliminate))
-			targetConditions.add("Diabetes");
+			targetConditions.add(TargettedMorbidConditions.DIABETES.toString());
 		if (!containsIngredient(ingredients, ExcelData.HypothyroidismEliminate))
-			targetConditions.add("Hypothyroidism");
+			targetConditions.add(TargettedMorbidConditions.HYPOTHYROIDISM.toString());
 		if (!containsIngredient(ingredients, ExcelData.HypertensionEliminate))
-			targetConditions.add("Hypertension");
+			targetConditions.add(TargettedMorbidConditions.HYPERTENSION.toString());
 		if (!containsIngredient(ingredients, ExcelData.PCOSEliminate))
-			targetConditions.add("PCOS");
-			
-		for(int i=0;i<targetConditions.size();i++)
+			targetConditions.add(TargettedMorbidConditions.PCOS.toString());
+
+		for (int i = 0; i < targetConditions.size(); i++) 
 		{
-			if(i==0)
+			if (i == 0)
 				targetCondition = targetConditions.get(i);
 			else
 				targetCondition = targetCondition + ", " + targetConditions.get(i);
 		}
-		
+
 		return targetCondition;
 	}
 
-	public Boolean GetToAddStatus(String ingredients, String targetCondition) {
+	///
+	// This method gets the ToAdd status of recipe
+	// returns true if the recipe with morbid condition target contains the good to add ingredients
+	///
+	public Boolean GetToAddStatus(String ingredients, String targetCondition) 
+	{
 		Boolean toAddStatus = false;
 
 		if ((targetCondition.contains("Diabetes") && containsIngredient(ingredients, ExcelData.DiabetesToAdd))
-			|| (targetCondition.contains("Hypothyroidism") && containsIngredient(ingredients, ExcelData.HypothyroidismToAdd))
-			|| (targetCondition.contains("Hypertension") && containsIngredient(ingredients, ExcelData.HypertensionToAdd))
-			|| (targetCondition.contains("PCOS") && containsIngredient(ingredients, ExcelData.PCOSToAdd)))
-				toAddStatus = true;
-			
+				|| (targetCondition.contains("Hypothyroidism")
+						&& containsIngredient(ingredients, ExcelData.HypothyroidismToAdd))
+				|| (targetCondition.contains("Hypertension")
+						&& containsIngredient(ingredients, ExcelData.HypertensionToAdd))
+				|| (targetCondition.contains("PCOS") && containsIngredient(ingredients, ExcelData.PCOSToAdd)))
+			toAddStatus = true;
+
 		return toAddStatus;
 	}
 
-	public Boolean GetNoAllergiesStatus(String ingredients, String targetCondition) {
+	///
+	// This method calculates no allery status
+	// returns true if the recipe ingredients targetted for morbid condition does not contain any allergens
+	///
+	public Boolean GetNoAllergiesStatus(String ingredients, String targetCondition) 
+	{
 		Boolean NoAllergiesStatus = false;
 
-		if (!containsIngredient(ingredients, ExcelData.AllergiesToFilter) && !targetCondition.isEmpty() && !targetCondition.isBlank())
+		if (!containsIngredient(ingredients, ExcelData.AllergiesToFilter) && !targetCondition.isEmpty()
+				&& !targetCondition.isBlank())
 			NoAllergiesStatus = true;
 
 		return NoAllergiesStatus;
+	}
+
+	///
+	// This method writes all the recipe details to 4 excel files based on filters
+	///
+	public void WriteRecipeToExcels(Recipe recipe) 
+	{
+		try
+		{
+			// Write all recipes to excel with no filters
+			if (excelWriter == null)
+				excelWriter = new ExcelWriter(ConfigReader.getAllRecipesOutputExcelPath(), ConfigReader.getOutputRowHeaders());
+			excelWriter.WriteRecipeToExcel(recipe);
+			Log.info("Recipe added to excel");
+	
+			// Write Elimination excel
+			if (excelWriterEliminate == null)
+				excelWriterEliminate = new ExcelWriter(ConfigReader.getEliminationOutputExcelPath(), ConfigReader.getOutputRowHeaders());
+			if (recipe.targetCondition != null && !recipe.targetCondition.isEmpty()) 
+			{
+				excelWriterEliminate.WriteRecipeToExcel(recipe);
+				Log.info("Recipe added to eliminate excel");
+			}
+	
+			// Write To Add excel
+			if (excelWriterToAdd == null)
+				excelWriterToAdd = new ExcelWriter(ConfigReader.getToAddOutputExcelPath(), ConfigReader.getOutputRowHeaders());
+			if (recipe.toAdd) 
+			{
+				excelWriterToAdd.WriteRecipeToExcel(recipe);
+				Log.info("Recipe added to to add excel");
+			}
+	
+			// Write Allergy excel
+			if (excelWriterAllergies == null)
+				excelWriterAllergies = new ExcelWriter(ConfigReader.getAllergiesOutputExcelPath(), ConfigReader.getOutputRowHeaders());
+			if (recipe.NoAllergies) 
+			{
+				excelWriterAllergies.WriteRecipeToExcel(recipe);
+				Log.info("Recipe added to to allergies excel");
+			}
+		}
+		catch(Exception ex)
+		{
+			Log.info(ex.getMessage());
+			Screenshots.CaptureScreenshot(driver);
+		}
 	}
 }

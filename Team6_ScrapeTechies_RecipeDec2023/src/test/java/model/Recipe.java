@@ -1,11 +1,14 @@
 package model;
 
+import enums.FoodCategory;
+import enums.RecipeCategory;
+
 public class Recipe {
 	
 	public String recipeId;
 	public String recipeName;
-	public String recipeCategory;
-	public String foodCategory;
+	public RecipeCategory recipeCategory;
+	public FoodCategory foodCategory;
 	public String ingredients;
 	public String prepTime;
 	public String cookingTime;
