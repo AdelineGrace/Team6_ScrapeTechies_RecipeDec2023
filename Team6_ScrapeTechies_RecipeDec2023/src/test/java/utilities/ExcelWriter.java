@@ -1,169 +1,167 @@
 package utilities;
 
-import org.apache.poi.ss.usermodel.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.util.Arrays;
+import java.util.List;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import model.Recipe;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 public class ExcelWriter {
-	  private String fileName;
-	    private Workbook workbook;
-	    private Sheet sheet;
-	    private Set<String> uniqueRecipeIds;
-	    private Recipe recipe = new Recipe();
-	    private boolean append;
-	    private int batchSize = 10;  // Set your desired batch size
-	    private int currentBatchSize = 0;
-	    private List<Recipe> batchRecipes = new ArrayList<>();
-	    
-	    
-    public ExcelWriter(String fileName, boolean append) { 
-    	 this.fileName = fileName;
-         this.append = append;
 
-         if (!append) {
-             this.workbook = new XSSFWorkbook();
-             this.sheet = workbook.createSheet("Recipe Data");
-             this.uniqueRecipeIds = new HashSet<>();
-             writeHeaders();
-         } else {
-        	  try (FileInputStream fileInputStream = new FileInputStream(fileName)) {
-                  this.workbook = WorkbookFactory.create(fileInputStream);
-              } catch (IOException e) {
-                  e.printStackTrace();
-              }
-              this.sheet = workbook.getSheet("Recipe Data");
-          }
-     }
+	String fileName;
 
-    
-    public int getCurrentBatchSize() {
-        return currentBatchSize;
-    }
-    public void writeToExcel(List<Recipe> recipes) {
-        for (Recipe recipe : recipes) {
-        	writeToExcel(recipe);
-        }
-    }
+	public ExcelWriter(String filename, String headers) {
+		fileName = filename;
+		try {
+			XSSFWorkbook workbook = new XSSFWorkbook();
+			XSSFSheet sheet = workbook.createSheet("Recipes");
 
-    public void writeToExcel(Recipe recipe) {
-        int rowNum = sheet.getPhysicalNumberOfRows();
+			XSSFRow rowhead = sheet.createRow((short) 0);
+			List<String> lstHeaders = Arrays.asList(headers.split(","));
+			for (int i = 0; i <= lstHeaders.size() - 1; i++) {
+				rowhead.createCell(i).setCellValue(lstHeaders.get(i));
+			}
 
-        String[] properties = {
-                "Recipe ID", "Recipe Name", "Recipe Category(Breakfast/lunch/snack/dinner)",
-                "Food Category(Veg/non-veg/vegan/Jain)", "Ingredients", "Preparation Time", "Cooking Time",
-                "Preparation method", "Nutrient values", "Targetted morbid conditions", "Recipe URL"
-        };
+			FileOutputStream fileOut = new FileOutputStream(fileName);
+			workbook.write(fileOut);
+			fileOut.close();
+			workbook.close();
+			Log.info("Excel file with headers has been generated successfully.");
 
-        for (int i = 0; i < properties.length; i++) {
-            Row dataRow = sheet.createRow(rowNum + i);
+		} catch (Exception ex) {
+			Log.info(ex.getMessage());
+		}
+	}
 
-            Cell cellLabel = dataRow.createCell(0);
-            cellLabel.setCellValue(properties[i]);
+	public void WriteRecipeToExcel(Recipe recipe) {
+		try {
+			FileInputStream fis = new FileInputStream(fileName);
+			XSSFWorkbook workbook = new XSSFWorkbook(fis);
+			XSSFSheet sheet = workbook.getSheetAt(0);
 
-            Cell cellValue = dataRow.createCell(1);
-            switch (i) {
-                case 0:
-                    cellValue.setCellValue(recipe.recipeId);
-                    break;
-                case 1:
-                    cellValue.setCellValue(recipe.recipeName);
-                    break;
-                case 2:
-                    cellValue.setCellValue(recipe.recipeCategory);
-                    break;
-                case 3:
-                    cellValue.setCellValue(recipe.foodCategory);
-                    break;
-                case 4:
-                    cellValue.setCellValue(recipe.ingredients);
-                    break;
-                case 5:
-                    cellValue.setCellValue(recipe.prepTime);
-                    break;
-                case 6:
-                    cellValue.setCellValue(recipe.cookingTime);
-                    break;
-                case 7:
-                    cellValue.setCellValue(recipe.preparationMethod);
-                    break;
-                case 8:
-                    cellValue.setCellValue(recipe.nutritionValue);
-                    break;
-                case 9:
-                    cellValue.setCellValue(recipe.targetCondition);
-                    break;
-                case 10:
-                    cellValue.setCellValue(recipe.recipeURL);
-                    break;
-            }
-        }
-    
-            currentBatchSize++;
-            batchRecipes.add(recipe);
+			int noOfColumns = sheet.getRow(sheet.getLastRowNum()).getLastCellNum();
+			Row row = sheet.createRow(sheet.getLastRowNum() + 1);
 
-            // Check if the batch size is reached and save the file
-            if (currentBatchSize >= batchSize) {
-                saveBatch();
-            }
-        }
-    
+			for (int i = 0; i < noOfColumns; i++) {
 
-    public void saveBatch() {
-        try (FileOutputStream fileOut = new FileOutputStream(fileName, true)) {
-            workbook.write(fileOut);
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            closeWorkbook();
-        }
+				Cell cellValue = row.createCell(i);
+				switch (i) {
+				case 0:
+					cellValue.setCellValue(recipe.recipeId);
+					break;
+				case 1:
+					cellValue.setCellValue(recipe.recipeName);
+					break;
+				case 2:
+					cellValue.setCellValue(recipe.recipeCategory.toString());
+					break;
+				case 3:
+					cellValue.setCellValue(recipe.foodCategory.toString());
+					break;
+				case 4:
+					cellValue.setCellValue(recipe.ingredients);
+					break;
+				case 5:
+					cellValue.setCellValue(recipe.prepTime);
+					break;
+				case 6:
+					cellValue.setCellValue(recipe.cookingTime);
+					break;
+				case 7:
+					cellValue.setCellValue(recipe.preparationMethod);
+					break;
+				case 8:
+					cellValue.setCellValue(recipe.nutritionValue);
+					break;
+				case 9:
+					cellValue.setCellValue(recipe.targetCondition);
+					break;
+				case 10:
+					cellValue.setCellValue(recipe.recipeURL);
+					break;
+				}
+			}
 
-        currentBatchSize = 0;
-        batchRecipes.clear();
-    }
+			FileOutputStream fileOut = new FileOutputStream(fileName);
+			workbook.write(fileOut);
+			fileOut.close();
+			workbook.close();
+			Log.info("Row added to excel");
+		} catch (Exception ex) {
+			Log.info(ex.getMessage());
+		}
+	}
 
-    public void closeWorkbook() {
-        try {
-            workbook.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	public void WriteRecipesToExcel(List<Recipe> lstRecipe) {
+		try {
+			FileInputStream fis = new FileInputStream(fileName);
+			XSSFWorkbook workbook = new XSSFWorkbook(fis);
+			XSSFSheet sheet = workbook.getSheetAt(0);
+			
+			int noOfColumns;
+			Row row;
+			
+			for (Recipe recipe : lstRecipe) {
+				
+				noOfColumns = sheet.getRow(sheet.getLastRowNum()).getLastCellNum();
+				row = sheet.createRow(sheet.getLastRowNum() + 1);
+				
+				for (int i = 0; i < noOfColumns; i++) {
 
-    private void writeHeaders() {
-        int rowNum = sheet.getLastRowNum() + 1;
+					Cell cellValue = row.createCell(i);
+					switch (i) {
+					case 0:
+						cellValue.setCellValue(recipe.recipeId);
+						break;
+					case 1:
+						cellValue.setCellValue(recipe.recipeName);
+						break;
+					case 2:
+						cellValue.setCellValue(recipe.recipeCategory.toString());
+						break;
+					case 3:
+						cellValue.setCellValue(recipe.foodCategory.toString());
+						break;
+					case 4:
+						cellValue.setCellValue(recipe.ingredients);
+						break;
+					case 5:
+						cellValue.setCellValue(recipe.prepTime);
+						break;
+					case 6:
+						cellValue.setCellValue(recipe.cookingTime);
+						break;
+					case 7:
+						cellValue.setCellValue(recipe.preparationMethod);
+						break;
+					case 8:
+						cellValue.setCellValue(recipe.nutritionValue);
+						break;
+					case 9:
+						cellValue.setCellValue(recipe.targetCondition);
+						break;
+					case 10:
+						cellValue.setCellValue(recipe.recipeURL);
+						break;
+					}
+				}
+			}
 
-        String[] properties = {
-                "Recipe ID", "Recipe Name", "Recipe Category(Breakfast/lunch/snack/dinner)",
-                "Food Category(Veg/non-veg/vegan/Jain)", "Ingredients", "Preparation Time", "Cooking Time",
-                "Preparation method", "Nutrient values", "Targetted morbid conditions", "Recipe URL"
-        };
-
-        for (int i = 0; i < properties.length; i++) {
-            Row headerRow = sheet.createRow(rowNum + i);
-
-            Cell cellLabel = headerRow.createCell(0);
-            cellLabel.setCellValue(properties[i]);
-        }
-    }
+			FileOutputStream fileOut = new FileOutputStream(fileName);
+			workbook.write(fileOut);
+			fileOut.close();
+			workbook.close();
+			Log.info("Rows added to excel");
+		} catch (Exception ex) {
+			Log.info(ex.getMessage());
+		}
+	}
 
 }
-
-
-
-
-
-
-
-
-
-
-

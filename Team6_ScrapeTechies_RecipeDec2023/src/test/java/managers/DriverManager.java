@@ -8,6 +8,7 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import enums.BrowserType;
+import utilities.ConfigReader;
 
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,7 +19,7 @@ public class DriverManager {
     private BrowserType browserType;
 
     public DriverManager() {
-        browserType = FileManager.getInstance().getConfigReader().getBrowserType();
+        browserType = ConfigReader.getBrowserType();
     }
 
     public WebDriver getDriver() {
@@ -42,8 +43,14 @@ public class DriverManager {
 //                    break;
                     ChromeOptions chromeOptions = new ChromeOptions();
                     chromeOptions.addArguments("--headless"); // Run Chrome in headless mode
+<<<<<<< HEAD
                     //chromeOptions.addArguments("--disable-popup-blocking"); // Disable popup blocking
                     chromeOptions.addArguments("--disable-extensions"); // Disable extensions
+=======
+                    chromeOptions.addArguments("--disable-popup-blocking"); // Disable popup blocking
+                    chromeOptions.addArguments("--disable-notifications"); // Disable popup blocking
+                    chromeOptions.addArguments("--disable-extensions"); // Disable popup blocking
+>>>>>>> main
                     chromeOptions.addArguments("--blink-settings=imagesEnabled=false");
 
                     // JavaScript to hide ads
@@ -69,8 +76,8 @@ public class DriverManager {
             }
         }
         driver.get().manage().deleteAllCookies();
-        driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(60));
-        driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(120));
+        driver.get().manage().timeouts().implicitlyWait(Duration.ofSeconds(ConfigReader.getImplicitWait()));
+        driver.get().manage().timeouts().pageLoadTimeout(Duration.ofSeconds(ConfigReader.getPageLoadWait()));
         driver.get().manage().window().maximize();
         
         return driver.get();
